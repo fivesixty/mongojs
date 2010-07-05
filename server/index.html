@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <head>
+    <title>socket.io client test</title>
+    <script src="/js/socket.io.js"></script>
+  </head>
+  <body>
+    <script>
+      io.setPath('/');
+    
+      function message(data) {
+        window.parent.postMessage(data, "*");
+      }
+      function send(e){
+        socket.send(e.data);
+      }
+      window.addEventListener("message", send);
+    
+      var socket = new io.Socket(null, {rememberTransport: false, port: window.location.port});
+      
+      socket.addEvent('message', message);
+      socket.addEvent('connect', function () { message("IFRAMECONNECTED"); });
+      socket.addEvent('disconnect', function () { message("IFRAMEDISCONNECTED"); });
+      socket.connect();
+    </script>
+  </body>
+</html>
